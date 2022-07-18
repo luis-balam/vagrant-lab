@@ -1,0 +1,77 @@
+
+
+
+1. CREATE SSH IN MOBAXTERM AND SET PERMISSIONS
+ssh-keygen 
+chmod -R 600 ~/.ssh
+## PERMISSIONS FOR EACH KEY TYPE:
+# chmod 600 id_rsa
+# chmod 644 id_rsa.pub
+# chmod 644 config
+2. COPY .ssh TO WINDOWS USER PATH
+  copy folder in FileExplorer from MOBAXTERM home path to windows user path
+    C:\Users\luis.barrales\AppData\Roaming\MobaXterm\home\.ssh
+    C:\Users\luis.barrales\.ssh
+3. ADD KEY TO SSH AGENT IN POWERSHELL ADMIN PRIVILIGIES
+  ssh-add C:\Users\luis.barrales\.ssh\id_rsa
+  ** MAKE SURE SSH AGENT SERVICE IS RUNNING AND START AUTOMATIC
+    ** WINDOWS
+    Start-Service ssh-agent
+    Set-Service ssh-agent -StartupType Automatic
+    ** LINUX
+    eval `ssh-agent` 
+    ssh-add ~/.ssh/<private_key_file> 
+4. COPY id_rsa.pub TO VAGRANT OR REMOTE SERVER
+  ssh-copy-id -i id_rsa.pub -p 2222 vagrant@127.0.0.1
+  ssh-copy-id -i .ssh/id_rsa.pub -p 2222 vagrant@127.0.0.1
+5. VALIDATE CONNECTION FROM MOBAXTERM
+  ssh -A -p 2222 vagrant@127.0.0.1
+6. CONNECT TO VCODE usingf a ssh config file
+  "C:\Users\luis.barrales\.ssh\config"
+  Host 127.0.0.1
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  IdentityFile "C:\Users\luis.barrales\.ssh\id_rsa"
+
+-------------------------------------
+# CONFIRM KEYS ADDED 
+ssh-add -L
+
+ssh -vv -A -p 2222 -o PasswordAuthentication=no 127.0.0.1
+
+ssh -vv -i "C:\Users\luis.barrales\.ssh\id_rsa" -p 2222 -o PasswordAuthentication=no 127.0.0.1
+
+ssh -vv -F "C:\Users\luis.barrales\.ssh\config" -p 2222 -o PasswordAuthentication=no 127.0.0.1
+
+
+ssh -T -D 50165 -F "C:\Users\luis.barrales\.ssh\config" "127.0.0.1" bash
+
+<MobaTextEditor>
+
+https://onlinemeded.atlassian.net/wiki/spaces/TOPS/pages/2532737168
+
+
+What Control tower does as service is it comes as a complete bundle and all the things are automated   
+--------------------------------------------
+
+.bashrc en la terminal MOBA
+# EN LA TERMINAL MOBA
+
+vagrant() {
+  if [[ $@ == "ssh" ]]; then
+    command vagrant ssh-config > vagrant-ssh-config && ssh -A -F vagrant-ssh-config ubuntu2204
+  else
+    command vagrant "$@"
+  fi
+}
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# EN .bashrv de la maquina vagrant
+# START SSH-AGENT EN LA MAQUINA VAGRANT
+
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+    eval `ssh-agent -s`
+    ssh-add
+fi
+---------------------------------------
