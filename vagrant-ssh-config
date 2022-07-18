@@ -1,0 +1,11 @@
+Host ubuntu2204
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /cygdrive/c/Dev/src/servers/ubuntu2204/.vagrant/machines/ubuntu2204/virtualbox/private_key
+  IdentitiesOnly yes
+  LogLevel FATAL
+
