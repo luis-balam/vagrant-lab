@@ -1,0 +1,7 @@
+Host 127.0.0.1
+  HostName 127.0.0.1
+  ForwardAgent yes
+  User vagrant
+  IdentityFile C:\Users\luis.barrales\.ssh\id_rsa
+  Port 2222 
+  PasswordAuthentication no
